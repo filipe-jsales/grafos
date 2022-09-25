@@ -19,7 +19,6 @@ int main()
     contaPtr = new Conta("7709", "33230124212");
     contaPtr2 = new Conta("1890", "67673190863");
     contaPtr->setSaldo(1000);
-    contaPtr->setDiasAbertura(40);
     cout << "abertura" << contaPtr->getDiasAbertura();
     contaPtr->imprimirDados();
 
