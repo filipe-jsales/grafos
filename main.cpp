@@ -13,12 +13,15 @@ int main()
     
     
     Conta conta1("12345", "01818");
-    Conta conta2("1", "2");
     Conta *contaPtr;
-    Conta *contaPtr1;
     Conta *contaPtr2;
-    Conta *contaPtr3;
-    contaPtr = new Conta("7709", "33230");
+
+    contaPtr = new Conta("7709", "33230124212");
+    contaPtr2 = new Conta("1890", "67673190863");
+    contaPtr->setSaldo(1000);
+    contaPtr->setDiasAbertura(40);
+    cout << "abertura" << contaPtr->getDiasAbertura();
+    contaPtr->imprimirDados();
 
     conta1.setTipoDeConta("Conta_Corrente");
     cout << "Tipo de Conta: " << conta1.getTipoDeConta() << "\n";
@@ -27,11 +30,11 @@ int main()
     int identificadorDependentes[Conta::MAXQUANTIDADEDEPENDENTE] = {123, 456};
 
     int* ptrIDDependentes = identificadorDependentes;
-    conta2.setIDDependentes(identificadorDependentes);
+    contaPtr2->setIDDependentes(identificadorDependentes);
 
-    cout << "id dependentes: \n";
+    cout << "id dependentes: ";
     for (int i= 0; i < Conta::MAXQUANTIDADEDEPENDENTE; i++) {
-        std::cout << conta2.getIDDependentes()[i] << ' ';
+        std::cout << contaPtr2->getIDDependentes()[i] << ' ';
     }
 
 
@@ -39,6 +42,8 @@ int main()
     delete ptrIDDependentes;
     contaPtr = 0; //desalocando memória
     delete contaPtr; //desalocando memória
+    contaPtr2 = 0;
+    delete contaPtr2;
 
     return 0;
 }

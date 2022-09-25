@@ -111,11 +111,21 @@ void Conta::imprimirDados() const
     cout << "Saldo: " << this->saldo << "\n";
     cout << "CPF do titular: " << this->cpfTitular << "\n";
     cout << "Numero da conta: " << this->numero <<  "\n";
+    cout << "Conta aberta a: " << this->diasAbertuda << "dias" << "\n";
+    exibirSituacaoCadastral();
 }
 
 void Conta::exibirSituacaoCadastral() const
 {
     if (this->diasAbertuda == 0)
         cout << "Em_Abertura" << "\n";
-
-}
+        return;
+    if (this->diasAbertuda > 30 && this->saldo >= 0)
+        cout << "Regular" << "\n";
+        return;
+    if (this->diasAbertuda > 30 && this->saldo < 0)
+        cout << "Negativada" << "\n";
+        return;
+    cout << "Fechada" << "\n";
+    return;
+;}
