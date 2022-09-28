@@ -16,15 +16,13 @@ public:
     // ...
     Conta(string , string );
     ~Conta();
-    static const int MAXQUANTIDADEDEPENDENTE =2;
-    static const int QUANTIDADEMAXTIPODECONTA = 3; // Conta corrente e poupança
-    static const int QUANTIDADEMAXREGULACAOCADASTRAL = 4; // Regular, divida, fechada, em_analise
-    static const int MAXCONTAPORPESSOA = 1;
+
     //static methods
 
     static void exibirTiposDeConta();
     static void exibirTiposDeSituacaoCadastral();
     static void setQuantidadeDependentes(int );
+    static int getMAXQUANTIDADEDEPENDENTE() ;
 
     void setNumero(const string &);
     string getNumero() const;
@@ -50,9 +48,14 @@ private:
 
     //static
     //um array const static
+    static const int MAXQUANTIDADEDEPENDENTE =2;
+    static const int QUANTIDADEMAXTIPODECONTA = 3; // Conta corrente e poupança
+    static const int QUANTIDADEMAXREGULACAOCADASTRAL = 4; // Regular, divida, fechada, em_analise
+    static const int MAXCONTAPORPESSOA = 1;
     static const string TIPOSDECONTA[ QUANTIDADEMAXTIPODECONTA ];
     static const string TIPOSDESITUACAOCADASTRAL[ QUANTIDADEMAXREGULACAOCADASTRAL ];
     int identificadorDependentes[MAXQUANTIDADEDEPENDENTE];
+
 
     string tipoDeConta;
 };

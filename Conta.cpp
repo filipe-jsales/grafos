@@ -97,7 +97,7 @@ void Conta::exibirTiposDeConta()
 
 void Conta::exibirTiposDeSituacaoCadastral()
 {
-    //loop using for
+    //loop using while
     int cont = 0;
     while (cont < QUANTIDADEMAXREGULACAOCADASTRAL)
     {
@@ -129,3 +129,8 @@ void Conta::exibirSituacaoCadastral() const
     cout << "Fechada" << "\n";
     return;
 ;}
+
+int Conta::getMAXQUANTIDADEDEPENDENTE() 
+{
+    return Conta::MAXQUANTIDADEDEPENDENTE;
+}

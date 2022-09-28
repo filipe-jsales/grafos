@@ -26,13 +26,13 @@ int main()
     cout << "Tipo de Conta: " << conta1.getTipoDeConta() << "\n";
     cout << "Situacao da Conta: ";
     conta1.exibirSituacaoCadastral();
-    int identificadorDependentes[Conta::MAXQUANTIDADEDEPENDENTE] = {123, 456};
+    int identificadorDependentes[Conta::getMAXQUANTIDADEDEPENDENTE()] = {123, 456};
 
     int* ptrIDDependentes = identificadorDependentes;
     contaPtr2->setIDDependentes(identificadorDependentes);
 
     cout << "id dependentes: ";
-    for (int i= 0; i < Conta::MAXQUANTIDADEDEPENDENTE; i++) {
+    for (int i= 0; i < Conta::getMAXQUANTIDADEDEPENDENTE(); i++) {
         std::cout << contaPtr2->getIDDependentes()[i] << ' ';
     }
 
