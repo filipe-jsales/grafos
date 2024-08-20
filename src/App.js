@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   ChakraProvider,
   Box,
@@ -39,6 +39,33 @@ function App() {
   const [graphData, setGraphData] = useState(initialGraphData);
   const [cardsVisiveis, setCardsVisiveis] = useState(false);
 
+  const colors = [
+    Cores.amethyst,
+    Cores.amethyst_2,
+    Cores.middle_Yellow,
+    Cores.dark_purple,
+    Cores.russian_violet,
+    Cores.lavender_floral,
+    Cores.purple_mountain_majesty,
+    Cores.dark_purple_2,
+    Cores.rich_black_fogra_39,
+    Cores.mauve
+  ];
+
+  const [bgColor, setBgColor] = useState(colors[0]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setBgColor(prevColor => {
+        const currentIndex = colors.indexOf(prevColor);
+        const nextIndex = (currentIndex + 1) % colors.length;
+        return colors[nextIndex];
+      });
+    }, 200);
+
+    return () => clearInterval(interval);
+  }, [colors]);
+
   const childToParent = childData => {
     setGraphData(childData);
   };
@@ -46,6 +73,9 @@ function App() {
   return (
     <ChakraProvider theme={theme}>
       <Box textAlign="center" fontSize="xl" bgColor={Cores.rich_black_fogra_39}>
+      <h1 style={{ backgroundColor: bgColor, padding: '20px', borderRadius: '10px', color: '#FFF' }}>
+          Super Grafo 3000
+        </h1>
         <Center minH="100vh">
           <HStack
             spacing={0}

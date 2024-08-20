@@ -1,14 +1,13 @@
 export const Cores = {
-    amethyst: "#A167BBff",
-    amethyst_2: "#895ECFff",
-    middle_Yellow: "#FCE92B",
-    textoCardResultados: '#ffffff',
-    dark_purple: "#181328ff",
-    russian_violet: "#382C54ff",
-    lavender_floral: "#BB7EDBff",
-    purple_mountain_majesty: "#A47EC1ff",
-    dark_purple_2: "#2C2344ff",
-    rich_black_fogra_39: "#08070E",
-    mauve: "#D8B6EA"
-  };
-  
+  amethyst: "#4CAF50", // Verde médio
+  amethyst_2: "#388E3C", // Verde escuro
+  middle_Yellow: "#8BC34A", // Verde claro
+  textoCardResultados: "#FFFFFF", // Branco
+  dark_purple: "#2E7D32", // Verde muito escuro
+  russian_violet: "#1B5E20", // Verde quase preto
+  lavender_floral: "#81C784", // Verde suave
+  purple_mountain_majesty: "#66BB6A", // Verde vivo
+  dark_purple_2: "#43A047", // Verde médio escuro
+  rich_black_fogra_39: "#33691E", // Verde oliva escuro
+  mauve: "#A5D6A7" // Verde pastel
+};
