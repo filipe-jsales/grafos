@@ -15,12 +15,10 @@ export class dijkstra {
     return lowestCostNode;
   };
 
-  // function that returns the minimum cost and path to reach Finish
   dijkstra = graph => {
     console.log('Graph: ');
     console.log(graph);
 
-    // track lowest cost to reach each node
     const trackedCosts = Object.assign({ finish: Infinity }, graph.start);
     console.log('Initial `costs`: ');
     console.log(trackedCosts);

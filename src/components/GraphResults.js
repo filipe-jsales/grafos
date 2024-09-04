@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   viewCard,
   viewCardList,
@@ -9,8 +9,6 @@ import {
   viewCardSelectionMenorCaminhoOrient,
 } from '../components/CardInfo';
 import { algoritmosGrafos } from '../Algoritmos/funcoesBasicas';
-import { dijkstra } from '../Algoritmos/dijkstra';
-import { criaMatrizAdjacencia } from '../Algoritmos/criaMatrizAdjacencia';
 import { planarity_test } from '../Algoritmos/planarFunction';
 import { arvoreGeradoraMinima } from '../Algoritmos/arvoreGeradoraMinima';
 import { cicloEuleriano } from '../Algoritmos/cicloEuleriano';
@@ -22,7 +20,6 @@ import { verificaEuleriano } from '../Algoritmos/verificaEuleriano';
 import { largura } from '../Algoritmos/largura';
 import { caminhoBellmanFord } from '../Algoritmos/caminhoBellmanFord';
 
-//Grafo de teste
 const stateOriginal = {
   counter: 6,
   graph: {
@@ -48,27 +45,6 @@ const stateOriginal = {
 
 const state = JSON.parse(JSON.stringify(stateOriginal));
 
-/*
-let state2 = {
-  counter: 4,
-  graph: {
-    nodes: [
-      { id: 1, label: 'A', x: 200, y: 0 },
-      { id: 2, label: 'B', x: 50, y: 250 },
-      { id: 3, label: 'C', x: 300, y: 0 },
-      { id: 4, label: 'D', x: 90, y: 100 },
-    ],
-    edges: [
-      { from: 1, to: 2, label: '3' },
-      { from: 1, to: 3, label: '5' },
-      { from: 3, to: 2, label: '3' },
-      { from: 3, to: 4, label: '9' },
-    ],
-  },
-};
-*/
-
-//Grafo K5 para teste de planaridade
 var K5 = {
   nodes: [
     { id: 0, label: 'A', x: 200, y: 0 },
@@ -91,7 +67,6 @@ var K5 = {
   ],
 };
 
-//Retorna os cards com os resultados
 function GraphResults(props) {
   const teste = new algoritmosGrafos(); //Cria objeto da classe algoritmosGrafos para realizar os testes e gerar os resultados
 
@@ -127,7 +102,6 @@ function GraphResults(props) {
   resultadoConexo = teste.verificaConexo(copia8);
   console.log('Resultado conexo:', resultadoConexo);
 
-  // Verifica se o  dígrafo é fortemente, unilateralmente ou fracamente conexo
   var resultadoConexidade = '';
   var resultadoComponentesFortes = '';
 
@@ -135,13 +109,11 @@ function GraphResults(props) {
     resultadoConexidade = verificaConexidade(vertices, arestas);
     console.log('Teste conexidade:');
     console.log(resultadoConexidade);
-    // Obtém os componentes fortes, caso o dígrafo seja fortemente conexo
     if (resultadoConexidade !== 'Fortemente Conexo') {
       resultadoComponentesFortes = componentesFortes(grafo.nodes, grafo.edges);
     }
   }
 
-  // Verifica se o grafo possui ciclo
   var resultadoCiclico = false;
 
   if (resultadoConexo && props.orientacao) {
@@ -151,7 +123,6 @@ function GraphResults(props) {
   }
   console.log('Possui ciclo? ', resultadoCiclico);
 
-  // Realiza a ordenação topológica, caso seja acíclico e conexo
   var resultadoOrdenacaoTopologica = '';
 
   if (!resultadoCiclico && resultadoConexo && props.orientacao) {
@@ -160,8 +131,6 @@ function GraphResults(props) {
   console.log('Ordenação Topológica:');
   console.log(resultadoOrdenacaoTopologica);
 
-  // Verifica se o grafo é planar, biconexo e euleriano,
-  // retornando também o ciclo euleriano se houver
   var resultadoPlanar = false;
   var resultadoBiconexo = false;
   var resultadoEuleriano = false;
@@ -183,7 +152,6 @@ function GraphResults(props) {
 
   const visibility = false;
 
-  // Obtém a Árvore Geradora Mínima do grafo
   var resultadosAGM = '';
   var resultadoCustoAGM = '';
   var resultadoArestasAGM = '';
@@ -205,7 +173,6 @@ function GraphResults(props) {
   const [selectMenorCaminhoNaoOrient, setSelectMenorCaminhoNaoOrient] =
     useState(['','']);
 
-  // Procura a existência da aresta
   var resultadoAresta = 'Informe dois vértices';
   if (existeAresta[0] !== '' && existeAresta[1] !== '') {
     resultadoAresta = teste.procuraAresta(
@@ -218,7 +185,6 @@ function GraphResults(props) {
     resultadoAresta = 'Informe dois vértices';
   }
 
-  // Verifica grau do vértice
   var grauVertice = 'Escolha um vértice';
   console.log(selectGrauVertice);
   if (selectGrauVertice !== '' && selectGrauVertice !== undefined) {
@@ -231,7 +197,6 @@ function GraphResults(props) {
     grauVertice = 'Escolha um vértice';
   }
 
-  // Verifica as adjacências do vértice
   var adjacenciasVertice = 'Escolha um vértice';
   if (selectVerticeAdj !== '' && selectVerticeAdj !== undefined) {
     adjacenciasVertice = teste.recuperarAdjacencias(copia7, selectVerticeAdj);
@@ -239,7 +204,6 @@ function GraphResults(props) {
     adjacenciasVertice = 'Escolha um vértice';
   }
 
-  // Verifica se o grafo possui peso em pelo menos uma aresta
   var possuiPeso = false;
   for (let i = 0; i < grafo.edges.length; i++) {
     if (grafo.edges[i].label != '') {
@@ -248,10 +212,6 @@ function GraphResults(props) {
     }
   }
 
-  //const algDijkstra = new dijkstra(); //Cria objeto da classe dijkstra para aplicar o algoritmo
-
-  // Cálculo do caminho mais curto para dígrafo ponderado
-  //var resulatdoDijkstra = '';
   var resultadoBellmanFord = '';
   var resultadoMenorCaminho = '';
   var resultadoMenorCusto = '';
@@ -266,7 +226,6 @@ function GraphResults(props) {
       selectMenorCaminhoOrient[1] !== '' &&
       selectMenorCaminhoOrient[0] !== selectMenorCaminhoOrient[1]
     ) {
-      // Verifica se o vértice de destino é uma fonte (não pode)
       var verticeDestino = grafo.nodes.find(
         vertice => vertice.label === selectMenorCaminhoOrient[1]
       );
@@ -274,7 +233,6 @@ function GraphResults(props) {
         aresta => aresta.to === verticeDestino.id
       );
 
-      // O menor caminho só será calculado se o destino não for uma fonte
       if (testaDestino !== undefined) {
         resultadoBellmanFord = caminhoBellmanFord(
           copia1,
@@ -284,50 +242,9 @@ function GraphResults(props) {
         console.log('Resultado Bellman Ford:');
         console.log(resultadoBellmanFord);
 
-        // Menor Caminho / Caminho mais curto
         resultadoMenorCaminho = resultadoBellmanFord.menorCaminho;
-        // Custo do menor caminho / Distância
         resultadoMenorCusto = resultadoBellmanFord.distanciaCusto;
 
-        /*
-        resulatdoDijkstra = algDijkstra.dijkstra(
-          criaMatrizAdjacencia(
-            copia1.nodes,
-            copia1.edges,
-            selectMenorCaminhoOrient[0],
-            selectMenorCaminhoOrient[1]
-          )
-        );
-        console.log('Resultado Dijkstra:');
-        console.log(resulatdoDijkstra);
-        */
-
-        /*
-        // Vértice de origem selecionado
-        resulatdoDijkstra.path[0] = selectMenorCaminhoOrient[0];
-        // Vértice de destino selecionado
-        resulatdoDijkstra.path[resulatdoDijkstra.path.length - 1] =
-          selectMenorCaminhoOrient[1];
-        */
-
-        // Custo do menor caminho / Distância
-        //resultadoMenorCusto = resulatdoDijkstra.distance;
-
-        /*
-        if (resultadoMenorCusto !== Infinity) {
-          resultadoMenorCaminho = resulatdoDijkstra.path.toString();
-
-          if (possuiPeso) {
-            // O custo do menor caminho caso houver peso
-            resultadoMenorCusto = resulatdoDijkstra.distance;
-          } else {
-            // A distância do menor caminho, caso não haja peso
-            resultadoMenorCusto = resulatdoDijkstra.path.length - 1;
-          }
-        } else {
-          resultadoMenorCaminho = 'Não existe caminho';
-        }
-        */
       } else {
         resultadoMenorCaminho = 'Não existe caminho';
       }
@@ -336,13 +253,11 @@ function GraphResults(props) {
     }
   }
   console.log(resultadoBellmanFord);
-  //console.log(resulatdoDijkstra.distance);
 
   console.log('origem, destino');
   console.log(selectMenorCaminhoNaoOrient);
   console.log('menor caminho n orientado=');
 
-  // Cálculo do menor caminho entre dois vértices para grafos não orientados
   var MenorCaminhoNorientado = '';
   if (!props.orientacao) {
     console.log('origem, destino =');
