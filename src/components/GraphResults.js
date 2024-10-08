@@ -69,11 +69,16 @@ var K5 = {
 
 function GraphResults(props) {
   const teste = new algoritmosGrafos(); //Cria objeto da classe algoritmosGrafos para realizar os testes e gerar os resultados
+  const [selectedVertices, setSelectedVertices] = useState([]); // Conjunto de vértices selecionados
 
   const vertice = state.graph.nodes[0]; // Usado nos resultados que se escolhe um vértice
   const grafo = props.state.graph; //variável com o grafo para se pegar mais facilmente os nodes e as edges
   const vertices = grafo.nodes;
   const arestas = grafo.edges;
+
+  const isIndependente = teste.verificarIndependente(selectedVertices, grafo);
+  const isClique = teste.verificarClique(selectedVertices, grafo);
+  const isDominante = teste.verificarDominante(selectedVertices, grafo);
 
   const origem = grafo.nodes[grafo.nodes.length - 1].id;
   const destino = grafo.nodes[0].id;
@@ -83,7 +88,6 @@ function GraphResults(props) {
 
   const copia = JSON.parse(JSON.stringify(grafo)); //copia o objeto grafo para não ser referenciado no algoritmo de dijkstra
 
-  //Implementados
   const copia1 = JSON.parse(JSON.stringify(grafo)); //copia o objeto grafo para não ser referenciado no algoritmo de dijkstra
   const copia2 = JSON.parse(JSON.stringify(grafo)); //copia o objeto grafo para não ser referenciado no algoritmo de dijkstra
   const copia3 = JSON.parse(JSON.stringify(grafo)); //copia o objeto grafo para não ser referenciado no algoritmo de dijkstra
@@ -94,21 +98,27 @@ function GraphResults(props) {
   const copia8 = JSON.parse(JSON.stringify(grafo)); //copia o objeto grafo para não ser referenciado no algoritmo de dijkstra
   const copia9 = JSON.parse(JSON.stringify(grafo)); //copia o objeto grafo para não ser referenciado no algoritmo de dijkstra
 
-  // Algoritmos Implementados
+  const handleSelectVertex = vertex => {
+    setSelectedVertices(prev => {
+      if (prev.find(v => v.id === vertex.id)) {
+        // Se o vértice já está selecionado, remove-o
+        return prev.filter(v => v.id !== vertex.id);
+      } else {
+        // Caso contrário, adiciona à seleção
+        return [...prev, vertex];
+      }
+    });
+  };
 
-  // Verifica se o grafo é conexo
   var resultadoConexo = false;
 
   resultadoConexo = teste.verificaConexo(copia8);
-  console.log('Resultado conexo:', resultadoConexo);
 
   var resultadoConexidade = '';
   var resultadoComponentesFortes = '';
 
   if (resultadoConexo && props.orientacao) {
     resultadoConexidade = verificaConexidade(vertices, arestas);
-    console.log('Teste conexidade:');
-    console.log(resultadoConexidade);
     if (resultadoConexidade !== 'Fortemente Conexo') {
       resultadoComponentesFortes = componentesFortes(grafo.nodes, grafo.edges);
     }
@@ -121,15 +131,12 @@ function GraphResults(props) {
   } else if (resultadoConexo && !props.orientacao) {
     resultadoCiclico = teste.possuiCiclo(copia2, origem, destino);
   }
-  console.log('Possui ciclo? ', resultadoCiclico);
 
   var resultadoOrdenacaoTopologica = '';
 
   if (!resultadoCiclico && resultadoConexo && props.orientacao) {
     resultadoOrdenacaoTopologica = ordenacaoTopologica(grafo);
   }
-  console.log('Ordenação Topológica:');
-  console.log(resultadoOrdenacaoTopologica);
 
   var resultadoPlanar = false;
   var resultadoBiconexo = false;
@@ -144,12 +151,6 @@ function GraphResults(props) {
       resultadoCicloEuleriano = cicloEuleriano(grafo.nodes, grafo.edges);
     }
   }
-  console.log('Planar?', resultadoPlanar);
-  console.log('Biconexo?', resultadoBiconexo);
-  console.log('Euleriano?', resultadoEuleriano);
-  console.log('Ciclo Euleriano:');
-  console.log(resultadoCicloEuleriano);
-
   const visibility = false;
 
   var resultadosAGM = '';
@@ -161,17 +162,15 @@ function GraphResults(props) {
     resultadoCustoAGM = resultadosAGM.custo;
     resultadoArestasAGM = resultadosAGM.arestas;
   }
-
-  console.log('Custo AGM:', resultadoCustoAGM);
-  console.log('AGM:');
-  console.log(resultadoArestasAGM);
-
-  const [existeAresta, setExisteAresta] = useState(['','']);
+  const [existeAresta, setExisteAresta] = useState(['', '']);
   const [selectGrauVertice, setSelectGrauVertice] = useState();
   const [selectVerticeAdj, setSelectVerticeAdj] = useState();
-  const [selectMenorCaminhoOrient, setSelectMenorCaminhoOrient] = useState(['','']);
+  const [selectMenorCaminhoOrient, setSelectMenorCaminhoOrient] = useState([
+    '',
+    '',
+  ]);
   const [selectMenorCaminhoNaoOrient, setSelectMenorCaminhoNaoOrient] =
-    useState(['','']);
+    useState(['', '']);
 
   var resultadoAresta = 'Informe dois vértices';
   if (existeAresta[0] !== '' && existeAresta[1] !== '') {
@@ -186,13 +185,14 @@ function GraphResults(props) {
   }
 
   var grauVertice = 'Escolha um vértice';
-  console.log(selectGrauVertice);
   if (selectGrauVertice !== '' && selectGrauVertice !== undefined) {
-    grauVertice = "Grau "+ teste.calcularGrau(
-      copia6,
-      selectGrauVertice,
-      props.orientacao ? 'orientado' : 'nao_orientado'
-    );
+    grauVertice =
+      'Grau ' +
+      teste.calcularGrau(
+        copia6,
+        selectGrauVertice,
+        props.orientacao ? 'orientado' : 'nao_orientado'
+      );
   } else {
     grauVertice = 'Escolha um vértice';
   }
@@ -217,8 +217,6 @@ function GraphResults(props) {
   var resultadoMenorCusto = '';
 
   if (props.orientacao) {
-    console.log('origem, destino =');
-    console.log(selectMenorCaminhoOrient[0], selectMenorCaminhoOrient[1]);
     if (
       selectMenorCaminhoOrient[0] !== undefined &&
       selectMenorCaminhoOrient[0] !== '' &&
@@ -239,12 +237,9 @@ function GraphResults(props) {
           selectMenorCaminhoOrient[0],
           selectMenorCaminhoOrient[1]
         );
-        console.log('Resultado Bellman Ford:');
-        console.log(resultadoBellmanFord);
 
         resultadoMenorCaminho = resultadoBellmanFord.menorCaminho;
         resultadoMenorCusto = resultadoBellmanFord.distanciaCusto;
-
       } else {
         resultadoMenorCaminho = 'Não existe caminho';
       }
@@ -252,16 +247,9 @@ function GraphResults(props) {
       resultadoMenorCaminho = 'Informe dois vértices distintos';
     }
   }
-  console.log(resultadoBellmanFord);
-
-  console.log('origem, destino');
-  console.log(selectMenorCaminhoNaoOrient);
-  console.log('menor caminho n orientado=');
 
   var MenorCaminhoNorientado = '';
   if (!props.orientacao) {
-    console.log('origem, destino =');
-    console.log(selectMenorCaminhoNaoOrient[0], selectMenorCaminhoNaoOrient[1]);
     if (
       selectMenorCaminhoNaoOrient[0] !== undefined &&
       selectMenorCaminhoNaoOrient[0] !== '' &&
@@ -275,7 +263,6 @@ function GraphResults(props) {
         selectMenorCaminhoNaoOrient[1]
       );
 
-      console.log(resultadoLargura.cost);
       MenorCaminhoNorientado = resultadoLargura.path;
       if (resultadoLargura.cost === 0) {
         resultadoMenorCusto = resultadoLargura.distance;
@@ -286,7 +273,6 @@ function GraphResults(props) {
       MenorCaminhoNorientado = 'Informe dois vértices distintos';
     }
   }
-  console.log(MenorCaminhoNorientado);
 
   return (
     <>
@@ -323,11 +309,7 @@ function GraphResults(props) {
       {resultadoConexidade !== 'Fortemente Conexo' &&
       props.orientacao &&
       resultadoConexo
-        ? viewCard(
-            'Componentes Fortes',
-            resultadoComponentesFortes,
-            visibility
-          )
+        ? viewCard('Componentes Fortes', resultadoComponentesFortes, visibility)
         : null}
       {resultadoConexo
         ? viewCard(
@@ -420,6 +402,27 @@ function GraphResults(props) {
             visibility
           )
         : null}
+
+      {grafo.nodes.map(node => (
+        <button
+          key={node.id}
+          onClick={() => handleSelectVertex(node)}
+          style={{
+            backgroundColor: selectedVertices.find(v => v.id === node.id)
+              ? 'green'
+              : 'gray',
+          }}
+        >
+          {node.label}
+        </button>
+      ))}
+
+      {isIndependente !== undefined && isIndependente !== null
+        ? viewCard('É um Conjunto Independente?', isIndependente ? 'Sim' : 'Não', false)
+        : null
+      }
+      {viewCard('É um Clique?', isClique ? 'Sim' : 'Não', false)}
+      {viewCard('É um Conjunto Dominante?', isDominante ? 'Sim' : 'Não', false)}
     </>
   );
 }

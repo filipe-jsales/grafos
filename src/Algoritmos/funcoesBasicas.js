@@ -10,6 +10,70 @@ export class algoritmosGrafos {
     });
   }
 
+  verificarIndependente(conjunto, grafo) {
+    for (let i = 0; i < conjunto.length; i++) {
+      for (let j = i + 1; j < conjunto.length; j++) {
+        const vertice1 = conjunto[i];
+        const vertice2 = conjunto[j];
+
+        const aresta = grafo.edges.find(
+          edge =>
+            (edge.from === vertice1.id && edge.to === vertice2.id) ||
+            (edge.from === vertice2.id && edge.to === vertice1.id)
+        );
+
+        if (aresta) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  verificarClique(conjunto, grafo) {
+    for (let i = 0; i < conjunto.length; i++) {
+      for (let j = i + 1; j < conjunto.length; j++) {
+        const vertice1 = conjunto[i];
+        const vertice2 = conjunto[j];
+
+        // Verifica se existe uma aresta entre os vértices do conjunto
+        const aresta = grafo.edges.find(
+          edge =>
+            (edge.from === vertice1.id && edge.to === vertice2.id) ||
+            (edge.from === vertice2.id && edge.to === vertice1.id)
+        );
+
+        if (!aresta) {
+          // Se não existe uma aresta entre dois vértices do conjunto, ele não é um clique
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  verificarDominante(conjunto, grafo) {
+    const dominados = new Set(conjunto.map(v => v.id)); // Conjunto de vértices já dominados (inicialmente, os do próprio conjunto)
+
+    grafo.nodes.forEach(node => {
+      if (!dominados.has(node.id)) {
+        // Verifica se o vértice fora do conjunto é adjacente a algum vértice do conjunto
+        const adjacente = grafo.edges.some(
+          edge =>
+            (dominados.has(edge.from) && edge.to === node.id) ||
+            (dominados.has(edge.to) && edge.from === node.id)
+        );
+
+        // Se o vértice não é dominado, então o conjunto não é dominante
+        if (!adjacente) {
+          return false;
+        }
+      }
+    });
+
+    return true;
+  }
+
   procuraAresta(origem, destino, grafo, orientado) {
     var resposta = 'Não existe a aresta';
     grafo.edges.forEach(teste);
@@ -79,14 +143,10 @@ export class algoritmosGrafos {
   }
 
   eCiclo(listaAdjacencia, origem, destino, visitados = new Set()) {
-    console.log(origem);
     visitados.add(origem);
     const atual = listaAdjacencia[origem];
     var temCiclo = false;
-    //var ciclo = false
     atual.find(vertice => {
-      console.log('ciclo');
-      console.log(visitados, vertice);
       if (visitados.has(vertice)) {
         ciclo = true;
         temCiclo = true;
@@ -95,7 +155,6 @@ export class algoritmosGrafos {
         !visitados.has(destino) &&
         this.eCiclo(listaAdjacencia, vertice, destino, visitados);
     });
-    console.log(atual);
     return temCiclo;
   }
 
@@ -117,39 +176,6 @@ export class algoritmosGrafos {
       caminho: visitados.has(destino),
     };
   }
-  /*
-    buscaEmLargura(grafo, origem, destino) {
-        const listaAdjacencia = criaListaAdjacencia(grafo.nodes, grafo.edges)
-        const visitados = new Set()
-
-        visitados.add(origem)
-
-        const fila = [origem]
-
-        let caminho = ''
-
-        while (fila.length > 0 && visitados.size !== listaAdjacencia.size) {
-            const vertice = fila.shift()
-            const atual = listaAdjacencia[vertice]
-            if (!atual)
-                break
-
-            caminho = atual.find(vertice => {
-                visitados.add(vertice)
-                fila.push(vertice)
-
-                return vertice === destino
-            })
-
-            if (caminho)
-                break
-        }
-
-        return {
-            verticesExpandidos: Array.from(visitados),
-            caminho
-        }
-    }*/
 
   converteIdLabel(listaVertices, listaArestas) {
     var listaArestasLabel = [];
@@ -174,12 +200,10 @@ export class algoritmosGrafos {
   }
 
   bfs(grafo, origin, destination) {
-    //console.log(origin+' para '+ destination)
     const adjacencyList = this.criarMapGrafos(
       grafo.nodes,
       this.converteIdLabel(grafo.nodes, grafo.edges)
     );
-    // console.log(adjacencyList)
     const visited = new Set();
     const menorCaminho = new Set();
 
@@ -220,17 +244,6 @@ export class algoritmosGrafos {
   }
 
   possuiCiclo(grafo, origem, destino) {
-    /*
-    const listaAdjacencias = criaListaAdjacencia(
-      grafo.nodes,
-      grafo.edges,
-      false
-    );
-    console.log('listaAdj=', listaAdjacencias);
-    //console.log(listaAdjacencias)
-    const resultado = this.eCiclo(listaAdjacencias, origem, destino);
-    return resultado;*/
-
     var nodes = grafo.nodes.length;
     var matriz = criaMatrizAdjacenciaNaoOrientado(grafo.nodes, grafo.edges);
     console.log(matriz);
@@ -240,10 +253,8 @@ export class algoritmosGrafos {
       for (let v = 0; v < nodes; v++) {
         if (matriz[vertex][v]) {
           if (v == parent)
-            //if v is the parent not move that direction
             continue;
           if (visited.has(v))
-            //if v is already visited
             return true;
           if (dfs(v, visited, vertex)) return true;
         }
@@ -255,10 +266,8 @@ export class algoritmosGrafos {
       var visited = new Set(); //visited set
       for (let v = 0; v < nodes; v++) {
         if (visited.has(v))
-          //when visited holds v, jump to next iteration
           continue;
         if (dfs(v, visited, -1)) {
-          //-1 as no parent of starting vertex
           return true;
         }
       }
@@ -291,13 +300,11 @@ export class algoritmosGrafos {
       var visitados = new Array(V);
       var pilha_rec = new Array(V);
 
-      // inicializa visitados e pilha_rec com false
       for (let i = 0; i < V; i++) {
         visitados[i] = false;
         pilha_rec[i] = false;
       }
 
-      // faz uma DFS
       while (true) {
         var achou_vizinho = false;
         var vizinho_achado;
@@ -312,7 +319,6 @@ export class algoritmosGrafos {
           if (pilha_rec[adj[v][i]]) {
             return true;
           } else if (!visitados[adj[v][i]]) {
-            // se não está na pilha e não foi visitado, indica que achou
             achou_vizinho = true;
             vizinho_achado = adj[v][i];
             break;
@@ -341,7 +347,6 @@ export class algoritmosGrafos {
   verificaConexo(grafo) {
 
     class Graph {
-      // Constructor
       constructor(v) {
         this.V = v;
         this.adj = new Array(v);
@@ -350,18 +355,14 @@ export class algoritmosGrafos {
         }
       }
 
-      // Function to add an edge into the graph
       addEdge(v, w) {
         this.adj[v].push(w); // Add w to v's list.
         this.adj[w].push(v); //The graph is undirected
       }
 
-      // A function used by DFS
       DFSUtil(v, visited) {
-        // Mark the current node as visited
         visited[v] = true;
 
-        // Recur for all the vertices adjacent to this vertex
         for (let i of this.adj[v]) {
           let n = i;
           if (!visited[n]) {
@@ -370,40 +371,29 @@ export class algoritmosGrafos {
         }
       }
 
-      // Method to check if all non-zero degree vertices are
-      // connected. It mainly does DFS traversal starting from
       isConnected() {
-        // Mark all the vertices as not visited
         let visited = new Array(this.V);
         let i;
         for (i = 0; i < this.V; i++) {
           visited[i] = false;
         }
 
-        // Find a vertex with zero degree
         for (i = 0; i < this.V; i++) {
           if (this.adj[i].length === 0) {
             return false;
           }
         }
 
-        // Find a vertex with non-zero degree
         for (i = 0; i < this.V; i++) {
           if (this.adj[i].length != 0) {
             break;
           }
         }
 
-        // If there are no edges in the graph, return true
         if (i == this.V) {
           return true;
         }
-
-
-        // Start DFS traversal from a vertex with non-zero degree
         this.DFSUtil(i, visited);
-
-        // Check if all non-zero degree vertices are visited
         for (i = 0; i < this.V; i++) {
           if (visited[i] == false && this.adj[i].length > 0) {
             return false;
@@ -412,7 +402,6 @@ export class algoritmosGrafos {
             return false;
           }
         }
-        console.log(visited);
 
         return true;
       }
