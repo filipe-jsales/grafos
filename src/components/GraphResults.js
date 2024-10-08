@@ -19,6 +19,7 @@ import { verificaConexidade } from '../Algoritmos/verificaConexidade';
 import { verificaEuleriano } from '../Algoritmos/verificaEuleriano';
 import { largura } from '../Algoritmos/largura';
 import { caminhoBellmanFord } from '../Algoritmos/caminhoBellmanFord';
+import { color } from '@chakra-ui/react';
 
 const stateOriginal = {
   counter: 6,
@@ -403,24 +404,34 @@ function GraphResults(props) {
           )
         : null}
 
-      {grafo.nodes.map(node => (
-        <button
-          key={node.id}
-          onClick={() => handleSelectVertex(node)}
-          style={{
-            backgroundColor: selectedVertices.find(v => v.id === node.id)
-              ? 'green'
-              : 'gray',
-          }}
-        >
-          {node.label}
-        </button>
-      ))}
-
+      {viewCard(
+        'Selecione os vértices para verificar:',
+        grafo.nodes.map(node => (
+          <button
+            key={node.id}
+            onClick={() => handleSelectVertex(node)}
+            style={{
+              backgroundColor: selectedVertices.find(v => v.id === node.id)
+                ? 'green'
+                : '#A47EC1ff',
+              borderRadius: '8px',
+              margin: '5px',
+              padding: '5px',
+              height: '35px',
+              marginBottom: '10px',
+            }}
+          >
+            {node.label}
+          </button>
+        ))
+      )}
       {isIndependente !== undefined && isIndependente !== null
-        ? viewCard('É um Conjunto Independente?', isIndependente ? 'Sim' : 'Não', false)
-        : null
-      }
+        ? viewCard(
+            'É um Conjunto Independente?',
+            isIndependente ? 'Sim' : 'Não',
+            false
+          )
+        : null}
       {viewCard('É um Clique?', isClique ? 'Sim' : 'Não', false)}
       {viewCard('É um Conjunto Dominante?', isDominante ? 'Sim' : 'Não', false)}
     </>
