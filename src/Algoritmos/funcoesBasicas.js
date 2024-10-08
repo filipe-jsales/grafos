@@ -53,27 +53,25 @@ export class algoritmosGrafos {
   }
 
   verificarDominante(conjunto, grafo) {
-    const dominados = new Set(conjunto.map(v => v.id)); // Conjunto de vértices já dominados (inicialmente, os do próprio conjunto)
-
-    grafo.nodes.forEach(node => {
+    const dominados = new Set(conjunto.map(v => v.id)); 
+  
+    for (let node of grafo.nodes) {
       if (!dominados.has(node.id)) {
-        // Verifica se o vértice fora do conjunto é adjacente a algum vértice do conjunto
         const adjacente = grafo.edges.some(
           edge =>
             (dominados.has(edge.from) && edge.to === node.id) ||
             (dominados.has(edge.to) && edge.from === node.id)
         );
-
-        // Se o vértice não é dominado, então o conjunto não é dominante
+  
         if (!adjacente) {
           return false;
         }
       }
-    });
-
+    }
+  
     return true;
   }
-
+  
   procuraAresta(origem, destino, grafo, orientado) {
     var resposta = 'Não existe a aresta';
     grafo.edges.forEach(teste);
