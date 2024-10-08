@@ -143,5 +143,6 @@ export function componentesFortes(listaVertices, listaArestas) {
   g1.SCC();
 
   console.log(componentes.join(" / "));
-  return "Quantidade = " + componentes.length + "\n" + componentes.join(" / ");
+  return componentes.join(" / ");
+  
 }

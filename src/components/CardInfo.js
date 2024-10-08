@@ -14,13 +14,6 @@ import { Fontes } from '../assets/Fontes';
 import { algoritmosGrafos } from '../Algoritmos/funcoesBasicas';
 
 export function viewCard(title, info, visible) {
-  let hasBreakLine = typeof info === 'string' && info.includes('\n')
-  let buildBreakLineComponent = info.split('\n').map((item, index) => (
-    <React.Fragment key={index}>
-      {item}
-      <br />
-    </React.Fragment>
-  ))
   return (
     <Flex
       h="auto"
@@ -57,7 +50,7 @@ export function viewCard(title, info, visible) {
         {title}
       </Box>
       <Box display={'flex'} fontSize={14} fontWeight="regular">
-        {hasBreakLine ? buildBreakLineComponent : info}
+        {info}
       </Box>
     </Flex>
   );
